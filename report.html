@@ -25,6 +25,8 @@
   </style>
 </head>
 <body>
+  <h1>Salesforce認定アドミニストレーター<br/>
+  正答率解析</h1>
   <textarea id="score-input" rows="10" cols="50"></textarea><br>
   <button id="analyze-button">解析</button>
   <table>
@@ -78,7 +80,9 @@
     // caluclateScores
     function calculateScores(userScores) {
       const totalQuestions = 60; // 総問題数
+      const passingScore = 65; // 合格ライン（パーセンテージ）
       const results = {};
+      let totalCorrectAnswers = 0;
 
       Object.keys(settings).forEach((category) => {
         const weight = settings[category];
@@ -86,6 +90,7 @@
         const questions = (totalQuestions * weight) / 100;
         const correctAnswers = (scorePercentage * questions) / 100;
         const incorrectAnswers = questions - correctAnswers;
+        totalCorrectAnswers += correctAnswers; // 総正解数を更新
 
         results[category] = {
           '出題割合': weight,
@@ -96,8 +101,24 @@
         };
       });
 
+      // 合格ラインに関連する計算
+      const totalPercentage = (totalCorrectAnswers / totalQuestions) * 100;
+      const questionsToPass = Math.ceil(totalQuestions * (passingScore / 100));
+      const differenceToPass = totalCorrectAnswers - questionsToPass;
+
+      // 総合結果の追加
+      results['総合結果'] = {
+        '総問題数': totalQuestions,
+        '合格ライン': passingScore,
+        '必要正解数': questionsToPass,
+        '総正解数': totalCorrectAnswers,
+        '総合正解率': totalPercentage,
+        '合格ラインとの差': differenceToPass
+      };
+
       return results;
     }
+
 
 
     // display Results
@@ -105,17 +126,33 @@
       const resultsBody = document.getElementById('results-body');
       resultsBody.innerHTML = ''; // 既存の結果をクリア
 
+      // カテゴリ毎の結果をテーブルに表示
       Object.keys(results).forEach((category) => {
-        const tr = resultsBody.insertRow();
-        tr.insertCell().textContent = category;
-        tr.insertCell().textContent = results[category]['出題割合'] + '%';
-        tr.insertCell().textContent = results[category]['出題数'].toFixed(2);
-        tr.insertCell().textContent = results[category]['正解率'] + '%';
-        tr.insertCell().textContent = results[category]['正解数'].toFixed(2);
-        tr.insertCell().textContent = results[category]['不正解数'].toFixed(2);
+        if (category !== '総合結果') {
+          const tr = resultsBody.insertRow();
+          tr.insertCell().textContent = category;
+          tr.insertCell().textContent = results[category]['出題割合'] + '%';
+          tr.insertCell().textContent = results[category]['出題数'].toFixed(2);
+          tr.insertCell().textContent = results[category]['正解率'] + '%';
+          tr.insertCell().textContent = results[category]['正解数'].toFixed(2);
+          tr.insertCell().textContent = results[category]['不正解数'].toFixed(2);
+        }
       });
-    }
 
+      // 総合結果の行をテーブルに表示
+      const totalResults = results['総合結果'];
+      const trTotal = resultsBody.insertRow();
+      trTotal.classList.add('highlight'); // スタイルの適用
+      trTotal.insertCell().textContent = '総合結果';
+      trTotal.insertCell().textContent = '---'; // 出題割合は表示不要
+      trTotal.insertCell().textContent = totalResults['総問題数'] + '問'; // 総問題数
+      trTotal.insertCell().textContent = totalResults['総合正解率'].toFixed(2) + '%'; // 総合正解率
+      // trTotal.insertCell().textContent = totalResults['必要正解数']; // 必要正解数
+      trTotal.insertCell().textContent =  totalResults['総正解数'].toFixed(2) + '問'; // 総正解数
+      trTotal.insertCell().textContent = (totalResults['総問題数'] - totalResults['総正解数']).toFixed(2) + '問'; // 総不正解数
+      const differenceToPass = totalResults['合格ラインとの差'];
+      trTotal.insertCell().textContent = (differenceToPass >= 0 ? '+' + differenceToPass.toFixed(2) : differenceToPass.toFixed(2)) + '問'; // 合格ラインとの差
+    }
 
     // Event Listner
     document.getElementById('analyze-button').addEventListener('click', () => {
