@@ -25,9 +25,9 @@
   </style>
 </head>
 <body>
-  <h1>Salesforce認定アドミニストレーター<br/>
-  正答率解析 合格点65%</h1>
-  <textarea id="score-input" rows="10" cols="50" placeholder="ここに結果を貼り付けてください。&#10;例：&#10;Configuration and Setup（設定とセットアップ） &#58;	70%&#10;...&#10;...&#10;...&#10;...&#10;...&#10;Workflow/Process Automation（ワークフロー/プロセスの自動化）&#20;70%"></textarea><br>
+  <h1>Salesforcel認定 PLATFORM アプリケーションビルダー<br/>
+  正答率解析 合格点63%</h1>
+  <textarea id="score-input" rows="10" cols="50" placeholder="ここに結果を貼り付けてください。&#10;例：&#10;Salesforce Fundamentals（SALESFORCE の基本） &#58;	70%&#10;...&#10;...&#10;...&#10;App Deployment（アプリケーションのリリース）	&#20;70%"></textarea><br>
   <button id="analyze-button">解析</button>
   <button id="clear-button">クリア</button>
   <table>
@@ -49,13 +49,16 @@
 
   <script>
     const settings = {
-      "Configuration and Setup": 20,
-      "Object Manager and Lightning App Builder": 20,
-      "Sales and Marketing Applications": 12,
-      "Service and Support Applications": 11,
-      "Productivity and Collaboration": 7,
-      "Data and Analytics Management": 14,
-      "Workflow/Process Automation": 16
+      "Salesforce Fundamentals": 23,
+      "Data Modeling and Management": 22,
+      "Business Logic and Process Automation": 28,
+      "User Interface": 17,
+      "App Deployment": 10
+      // "SALESFORCE の基本": 23,
+      // "データモデリングおよび管理": 22,
+      // "ビジネスロジックとプロセスの自動化": 28,
+      // "ユーザインターフェース": 17,
+      // "アプリケーションのリリース": 10
     };
     //Parse User Input
     function parseUserInput(input) {
@@ -82,7 +85,7 @@
     // caluclateScores
     function calculateScores(userScores) {
       const totalQuestions = 60; // 総問題数
-      const passingScore = 65; // 合格ライン（パーセンテージ）
+      const passingScore = 63; // 合格ライン（パーセンテージ）
       const results = {};
       let totalCorrectAnswers = 0;
 
@@ -177,6 +180,6 @@
 
   </script>
   <br />
-  <a href="apb.html">PLATFORM アプリケーションビルダー正答率解析</a>
+  <a href="index.html">アドミニストレーター正答率解析</a>
 </body>
 </html>
