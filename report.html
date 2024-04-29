@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Score Analysis</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    td.highlight {
+      background-color: #ffff99;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="score-input" rows="10" cols="50"></textarea><br>
+  <button id="analyze-button">解析</button>
+  <table>
+    <thead>
+      <tr>
+        <th>カテゴリ名</th>
+        <th>出題割合</th>
+        <th>出題数</th>
+        <th>正解率</th>
+        <th>正解数</th>
+        <th>不正解数</th>
+      </tr>
+    </thead>
+    <tbody id="results-body">
+      <!-- 結果表示エリア -->
+    </tbody>
+  </table>
+
+  <script>
+    const settings = {
+      "Configuration and Setup": 20,
+      "Object Manager and Lightning App Builder": 20,
+      "Sales and Marketing Applications": 12,
+      "Service and Support Applications": 11,
+      "Productivity and Collaboration": 7,
+      "Data and Analytics Management": 14,
+      "Workflow/Process Automation": 16
+    };
+    //Parse User Input
+    function parseUserInput(input) {
+      const scores = {};
+      let match;
+      let pattern = /^(.+?)(?:\（.+?\）)?[\s:]*\s+(\d+)%/gm; // コロンの有無に関わらず対応するパターン
+
+      while ((match = pattern.exec(input)) !== null) {
+        let category = match[1].trim();
+        category = category.replace(/（.+?）/g, '').trim(); // 日本語名を削除
+        const score = parseInt(match[2], 10);
+
+        Object.keys(settings).forEach((setting) => {
+          // 設定名が入力されたカテゴリ名に部分的に含まれているか確認
+          if (setting.toLowerCase() === category.toLowerCase()) {
+            scores[setting] = score;
+          }
+        });
+      }
+
+  return scores;
+}
+
+    // caluclateScores
+    function calculateScores(userScores) {
+      const totalQuestions = 60; // 総問題数
+      const results = {};
+
+      Object.keys(settings).forEach((category) => {
+        const weight = settings[category];
+        const scorePercentage = userScores[category] || 0;
+        const questions = (totalQuestions * weight) / 100;
+        const correctAnswers = (scorePercentage * questions) / 100;
+        const incorrectAnswers = questions - correctAnswers;
+
+        results[category] = {
+          '出題割合': weight,
+          '出題数': questions,
+          '正解率': scorePercentage,
+          '正解数': correctAnswers,
+          '不正解数': incorrectAnswers
+        };
+      });
+
+      return results;
+    }
+
+
+    // display Results
+    function displayResults(results) {
+      const resultsBody = document.getElementById('results-body');
+      resultsBody.innerHTML = ''; // 既存の結果をクリア
+
+      Object.keys(results).forEach((category) => {
+        const tr = resultsBody.insertRow();
+        tr.insertCell().textContent = category;
+        tr.insertCell().textContent = results[category]['出題割合'] + '%';
+        tr.insertCell().textContent = results[category]['出題数'].toFixed(2);
+        tr.insertCell().textContent = results[category]['正解率'] + '%';
+        tr.insertCell().textContent = results[category]['正解数'].toFixed(2);
+        tr.insertCell().textContent = results[category]['不正解数'].toFixed(2);
+      });
+    }
+
+
+    // Event Listner
+    document.getElementById('analyze-button').addEventListener('click', () => {
+      const input = document.getElementById('score-input').value;
+      const userScores = parseUserInput(input);
+      if (Object.keys(userScores).length === 0) {
+        // パースに失敗した場合のエラーメッセージを表示
+        alert("テキストの形式が正しくありません。");
+      } else {
+        const results = calculateScores(userScores);
+        displayResults(results);
+      }
+    });
+
+
+  </script>
+</body>
+</html>
