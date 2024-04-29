@@ -297,6 +297,23 @@
       }
     });
 
+    // 共通設定を保存するオブジェクト
+    const commonSettings = {
+      title: "Salesforce認定アドミニストレーター",
+      description: "正答率解析 合格点 65点",
+      placeholder: "ここに結果を貼り付けて、解析ボタンを押してください。 以下貼り付ける例：\n\n    Configuration and Setup（設定とセットアップ） &#58;	70%",
+      settings: {
+        "Configuration and Setup": 20,
+        "Object Manager and Lightning App Builder": 20,
+        "Sales and Marketing Applications": 12,
+        "Service and Support Applications": 11,
+        "Productivity and Collaboration": 7,
+        "Data and Analytics Management": 14,
+        "Workflow/Process Automation": 16
+      },
+      totalQuestions: 60,
+      passingScore: 65
+    }
 
   </script>
 </body>
