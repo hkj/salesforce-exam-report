@@ -29,6 +29,7 @@
   正答率解析</h1>
   <textarea id="score-input" rows="10" cols="50"></textarea><br>
   <button id="analyze-button">解析</button>
+  <button id="clear-button">クリア</button>
   <table>
     <thead>
       <tr>
@@ -38,6 +39,7 @@
         <th>正解率</th>
         <th>正解数</th>
         <th>不正解数</th>
+        <th>合格ラインとの差</th>
       </tr>
     </thead>
     <tbody id="results-body">
@@ -154,7 +156,12 @@
       trTotal.insertCell().textContent = (differenceToPass >= 0 ? '+' + differenceToPass.toFixed(2) : differenceToPass.toFixed(2)) + '問'; // 合格ラインとの差
     }
 
-    // Event Listner
+    // Event Listner for clear-button
+    document.getElementById('clear-button').addEventListener('click', () => {
+      document.getElementById('score-input').value = '';
+    })
+
+    // Event Listner for analyze-button
     document.getElementById('analyze-button').addEventListener('click', () => {
       const input = document.getElementById('score-input').value;
       const userScores = parseUserInput(input);
