@@ -5,48 +5,134 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Score Analysis</title>
   <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #e7f2fa;
+      padding: 20px;
+      margin: 0;
+    }
+    #score-input {
+      width: 98%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #009edb;
+      font-size: 14px;
+      margin-bottom: 10px;
+      box-shadow: inset 0 0 5px rgba(0, 158, 219, 0.5);
+    }
+    #score-input:focus {
+      outline: none;
+      border-color: #0079b8;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #009edb;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 5px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0079b8;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 20px;
     }
     table, th, td {
-      border: 1px solid #ddd;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
+      border: 1px solid #009edb;
     }
     th {
-      background-color: #f2f2f2;
+      background-color: #009edb;
+      color: white;
     }
     td.highlight {
-      background-color: #ffff99;
+      background-color: #e1f0f8;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .title {
+      text-align: center;
+      color: #009edb;
+      margin: 0;
+      padding: 10px;
+      font-size: 24px;
+    }
+    .description {
+      text-align: center;
+      color: #0079b8;
+      margin-top: 0;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+    .links {
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .link-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #009edb;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none; /* リンクの下線を取り除く */
+      margin: 0 10px; /* リンクの間にスペースを追加 */
+      transition: 0.3s;
+    }
+    .link-button:hover {
+      background-color: #0079b8;
     }
   </style>
 </head>
 <body>
-  <h1>Salesforce認定上級アドミニストレーター<br/>
-  正答率解析 合格点65%</h1>
-  <textarea id="score-input" rows="10" cols="50" placeholder="ここに結果を貼り付けてください。&#10;例：&#10;Configuration and Setup（設定とセットアップ） &#58;	70%&#10;...&#10;...&#10;...&#10;...&#10;...&#10;Workflow/Process Automation（ワークフロー/プロセスの自動化）&#20;70%"></textarea><br>
-  <button id="analyze-button">解析</button>
-  <button id="clear-button">クリア</button>
-  <table>
-    <thead>
-      <tr>
-        <th>カテゴリ名</th>
-        <th>出題割合</th>
-        <th>出題数</th>
-        <th>正解率</th>
-        <th>正解数</th>
-        <th>不正解数</th>
-        <th>合格ラインとの差</th>
-      </tr>
-    </thead>
-    <tbody id="results-body">
-      <!-- 結果表示エリア -->
-    </tbody>
-  </table>
+  <div class="container">
+    <h1 class="title">Salesforce認定上級アドミニストレーター</h1>
+    <p class="description">正答率解析 合格点65%</p>
+    <textarea id="score-input" rows="10" cols="50" placeholder="ここに結果を貼り付けて、解析ボタンを押してください。 以下貼り付ける例：
 
+    Security and Access（セキュリティとアクセス） &#58;	70%
+    Object and Applications（オブジェクトとアプリケーション）	70%
+    Auditing and Monitoring（監査と監視）	70%
+    Cloud Applications（CLOUD アプリケーション）	70%
+    Data and Analysis Management（データと分析管理）	70%
+    Environment Management and Deployment（変更管理とリリース）	70%
+    Process Automation（プロセスの自動化）&#20;70%"></textarea><br>
+    <button id="analyze-button">解析</button>
+    <button id="clear-button">クリア</button>
+    <table>
+      <thead>
+        <tr>
+          <th>カテゴリ名</th>
+          <th>出題割合</th>
+          <th>出題数</th>
+          <th>正解率</th>
+          <th>正解数</th>
+          <th>不正解数</th>
+          <th>合格ラインとの差</th>
+        </tr>
+      </thead>
+      <tbody id="results-body">
+        <!-- 結果表示エリア -->
+      </tbody>
+    </table>
+  <div class="links">
+    <a href="index.html" class="link-button">アドミニストレーター</a>
+    <a href="pab.html" class="link-button">アプリケーション PLATFORM ビルダー</a>
+  </div>
+</div>
   <script>
     const settings = {
       "Security and Access": 20,
@@ -105,7 +191,7 @@
 
       // 合格ラインに関連する計算
       const totalPercentage = (totalCorrectAnswers / totalQuestions) * 100;
-      const questionsToPass = Math.ceil(totalQuestions * (passingScore / 100));
+      const questionsToPass = totalQuestions * (passingScore / 100);
       const differenceToPass = totalCorrectAnswers - questionsToPass;
 
       // 総合結果の追加
@@ -134,10 +220,10 @@
           const tr = resultsBody.insertRow();
           tr.insertCell().textContent = category;
           tr.insertCell().textContent = results[category]['出題割合'] + '%';
-          tr.insertCell().textContent = results[category]['出題数'].toFixed(2);
+          tr.insertCell().textContent = results[category]['出題数'].toFixed(3);
           tr.insertCell().textContent = results[category]['正解率'] + '%';
-          tr.insertCell().textContent = results[category]['正解数'].toFixed(2);
-          tr.insertCell().textContent = results[category]['不正解数'].toFixed(2);
+          tr.insertCell().textContent = results[category]['正解数'].toFixed(3);
+          tr.insertCell().textContent = results[category]['不正解数'].toFixed(3);
         }
       });
 
@@ -146,14 +232,14 @@
       const trTotal = resultsBody.insertRow();
       trTotal.classList.add('highlight'); // スタイルの適用
       trTotal.insertCell().textContent = '総合結果';
-      trTotal.insertCell().textContent = '---'; // 出題割合は表示不要
+      trTotal.insertCell().textContent = '100%'; // 出題割合は表示不要
       trTotal.insertCell().textContent = totalResults['総問題数'] + '問'; // 総問題数
-      trTotal.insertCell().textContent = totalResults['総合正解率'].toFixed(2) + '%'; // 総合正解率
+      trTotal.insertCell().textContent = totalResults['総合正解率'].toFixed(3) + '%'; // 総合正解率
       // trTotal.insertCell().textContent = totalResults['必要正解数']; // 必要正解数
-      trTotal.insertCell().textContent =  totalResults['総正解数'].toFixed(2) + '問'; // 総正解数
-      trTotal.insertCell().textContent = (totalResults['総問題数'] - totalResults['総正解数']).toFixed(2) + '問'; // 総不正解数
+      trTotal.insertCell().textContent =  totalResults['総正解数'].toFixed(3) + '問'; // 総正解数
+      trTotal.insertCell().textContent = (totalResults['総問題数'] - totalResults['総正解数']).toFixed(3) + '問'; // 総不正解数
       const differenceToPass = totalResults['合格ラインとの差'];
-      trTotal.insertCell().textContent = (differenceToPass >= 0 ? '+' + differenceToPass.toFixed(2) : differenceToPass.toFixed(2)) + '問'; // 合格ラインとの差
+      trTotal.insertCell().textContent = (differenceToPass >= 0 ? '+' + differenceToPass.toFixed(3) : differenceToPass.toFixed(3)) + '問'; // 合格ラインとの差
     }
 
     // Event Listner for clear-button
@@ -176,8 +262,5 @@
 
 
   </script>
-  <br />
-  <a href="index.html">アドミニストレーター正答率解析</a><br />
-  <a href="apb.html">PLATFORM アプリケーションビルダー正答率解析</a>
 </body>
 </html>
