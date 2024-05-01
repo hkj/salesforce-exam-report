@@ -165,21 +165,88 @@
         <!-- 結果表示エリア -->
       </tbody>
     </table>
-  <div class="links">
+  <!-- <div class="links">
     <a href="pab.html" class="link-button">アプリケーション PLATFORM ビルダー</a>
     <a href="adv_admin.html" class="link-button">上級アドミニストレーター</a>
-  </div>
+  </div> -->
+  <select id="exam-select">
+    <option value="admin">アドミニストレーター</option>
+    <option value="appBuilder">Platform アプリケーションビルダー</option>
+    <option value="advAdmin">上級アドミニストレーター</option>
+  </select>
 </div>
   <script>
-    const settings = {
-      "Configuration and Setup": 20,
-      "Object Manager and Lightning App Builder": 20,
-      "Sales and Marketing Applications": 12,
-      "Service and Support Applications": 11,
-      "Productivity and Collaboration": 7,
-      "Data and Analytics Management": 14,
-      "Workflow/Process Automation": 16
-    };
+    // 共通設定を保存するオブジェクト
+    const commonSettings = {
+      admin: {
+        title: "Salesforce認定アドミニストレーター",
+        description: "正答率解析 合格点 65%",
+        placeholder: "ここに結果を貼り付けて、解析ボタンを押してください。 以下貼り付ける例：\n\nConfiguration and Setup（設定とセットアップ）: 70%\nObject Manager and Lightning App Builder（オブジェクトマネージャとLightning アプリケーションビルダー）	70%\nSales and Marketing Applications（セールス&マーケティングアプリケーション）	70%\nService and Support Applications（サービス&サポートアプリケーション）	70%\nProductivity and Collaboration（生産性向上とコラボレーション）	70%\nData and Analytics Management（データ管理&分析）	70%\nWorkflow/Process Automation（ワークフロー/プロセスの自動化）&#20;70%",
+        settings: {
+          "Configuration and Setup": 20,
+          "Object Manager and Lightning App Builder": 20,
+          "Sales and Marketing Applications": 12,
+          "Service and Support Applications": 11,
+          "Productivity and Collaboration": 7,
+          "Data and Analytics Management": 14,
+          "Workflow/Process Automation": 16
+        },
+        totalQuestions: 60,
+        passingScore: 65
+      },
+      advAdmin: {
+        title: "Salesforce認定上級アドミニストレーター",
+        description: "正答率解析 合格点 65%",
+        placeholder: "ここに結果を貼り付けて、解析ボタンを押してください。 以下貼り付ける例：\n\nSecurity and Access（セキュリティとアクセス）:	70%\nObject and Applications（オブジェクトとアプリケーション）	70%\nAuditing and Monitoring（監査と監視）	70%\nCloud Applications（CLOUD アプリケーション）	70%\nData and Analysis Management（データと分析管理）	70%\nEnvironment Management and Deployment（変更管理とリリース）	70%\nProcess Automation（プロセスの自動化） 70%",
+        settings: {
+          "Security and Access": 20,
+          "Object and Applications": 19,
+          "Auditing and Monitoring": 10,
+          "Cloud Applications": 11,
+          "Data and Analytics Management": 13,
+          "Environment Management and Deployment": 7,
+          "Process Automation": 20
+        },
+        totalQuestions: 60,
+        passingScore: 65
+      },
+      appBuilder: {
+        title: "Salesforcel認定 Platform アプリケーションビルダー",
+        description: "正答率解析 合格点 63%",
+        placeholder: "ここに結果を貼り付けて、解析ボタンを押してください。 以下貼り付ける例：\n\nSalesforce Fundamentals（SALESFORCE の基本）: 70%\nData Modeling and Management（データモデリングおよび管理）	70%\nBusiness Logic and Process Automation（ビジネスロジックとプロセスの自動化）	70%\nUser Interface（ユーザインターフェース）70%\nApp Deployment（アプリケーションのリリース）70%",
+        settings: {
+          "Salesforce Fundamentals": 23,
+          "Data Modeling and Management": 22,
+          "Business Logic and Process Automation": 28,
+          "User Interface": 17,
+          "App Deployment": 10
+        },
+        totalQuestions: 60,
+        passingScore: 63
+
+      }
+    }
+
+    //現在のページの設定を選択
+    // const currentSettings = commonSettings.advAdmin; // 例として上級アドミンを選択してみる
+    let currentSettings = commonSettings.admin; // 例としてアドミンを選択してみる
+    // const currentSettings = commonSettings.appBuilder; // 例としてPlatformアプリケーションビルダ-を選択してみる
+
+    // HTML要素に設定を適用
+    document.getElementsByClassName('title')[0].textContent = currentSettings.title;
+    document.getElementsByClassName('description')[0].textContent = currentSettings.description;
+    document.getElementById('score-input').placeholder = currentSettings.placeholder;
+
+
+    // const settings = {
+    //   "Configuration and Setup": 20,
+    //   "Object Manager and Lightning App Builder": 20,
+    //   "Sales and Marketing Applications": 12,
+    //   "Service and Support Applications": 11,
+    //   "Productivity and Collaboration": 7,
+    //   "Data and Analytics Management": 14,
+    //   "Workflow/Process Automation": 16
+    // };
     //Parse User Input
     function parseUserInput(input) {
       const scores = {};
@@ -191,7 +258,7 @@
         category = category.replace(/（.+?）/g, '').trim(); // 日本語名を削除
         const score = parseInt(match[2], 10);
 
-        Object.keys(settings).forEach((setting) => {
+        Object.keys(currentSettings.settings).forEach((setting) => {
           // 設定名が入力されたカテゴリ名に部分的に含まれているか確認
           if (setting.toLowerCase() === category.toLowerCase()) {
             scores[setting] = score;
@@ -204,13 +271,14 @@
 
     // caluclateScores
     function calculateScores(userScores) {
-      const totalQuestions = 60; // 総問題数
-      const passingScore = 65; // 合格ライン（パーセンテージ）
+      const totalQuestions = currentSettings.totalQuestions; // 総問題数
+      const passingScore = currentSettings.passingScore; //合格ライン(%)
       const results = {};
       let totalCorrectAnswers = 0;
 
-      Object.keys(settings).forEach((category) => {
-        const weight = settings[category];
+      // 要変更
+      Object.keys(currentSettings.settings).forEach((category) => {
+        const weight = currentSettings.settings[category];
         const scorePercentage = userScores[category] || 0;
         const questions = (totalQuestions * weight) / 100;
         const correctAnswers = (scorePercentage * questions) / 100;
@@ -279,6 +347,20 @@
       trTotal.insertCell().textContent = (differenceToPass >= 0 ? '+' + differenceToPass.toFixed(3) : differenceToPass.toFixed(3)) + '問'; // 合格ラインとの差
     }
 
+    // 選択されたオプションに基づいて、設定を適用する関数
+    function applySettings(choice) {
+      if (!commonSettings[choice]) {
+        console.error('Settings for the selected choice are undefined.');
+        return;
+      }
+      const settings = commonSettings[choice];
+      currentSettings = commonSettings[choice];
+      document.getElementsByClassName('title')[0].textContent = settings.title;
+      document.getElementsByClassName('description')[0].textContent = settings.description;
+      document.getElementById('score-input').placeholder = settings.placeholder;
+
+    }
+
     // Event Listner for clear-button
     document.getElementById('clear-button').addEventListener('click', () => {
       document.getElementById('score-input').value = '';
@@ -297,23 +379,11 @@
       }
     });
 
-    // 共通設定を保存するオブジェクト
-    const commonSettings = {
-      title: "Salesforce認定アドミニストレーター",
-      description: "正答率解析 合格点 65点",
-      placeholder: "ここに結果を貼り付けて、解析ボタンを押してください。 以下貼り付ける例：\n\n    Configuration and Setup（設定とセットアップ） &#58;	70%",
-      settings: {
-        "Configuration and Setup": 20,
-        "Object Manager and Lightning App Builder": 20,
-        "Sales and Marketing Applications": 12,
-        "Service and Support Applications": 11,
-        "Productivity and Collaboration": 7,
-        "Data and Analytics Management": 14,
-        "Workflow/Process Automation": 16
-      },
-      totalQuestions: 60,
-      passingScore: 65
-    }
+    // Event Listner for Drop Down Select
+    document.getElementById('exam-select').addEventListener('change', function() {
+      applySettings(this.value);
+    });
+
 
   </script>
 </body>
