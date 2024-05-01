@@ -359,6 +359,10 @@
       document.getElementsByClassName('description')[0].textContent = settings.description;
       document.getElementById('score-input').placeholder = settings.placeholder;
 
+      // テキストエリアとテーブルの内容をクリア
+      document.getElementById('score-input').value = '';
+      const resultsBody = document.getElementById('results-body');
+      resultsBody.innerHTML = '';
     }
 
     // Event Listner for clear-button
