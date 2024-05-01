@@ -363,7 +363,9 @@
 
     // Event Listner for clear-button
     document.getElementById('clear-button').addEventListener('click', () => {
-      document.getElementById('score-input').value = '';
+      document.getElementById('score-input').value = ''; // テキストエリアをクリア
+      const resultsBody = document.getElementById('results-body');
+      resultsBody.innerHTML = ''; // テーブルの内容をクリア
     })
 
     // Event Listner for analyze-button
