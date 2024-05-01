@@ -3,7 +3,7 @@ const commonSettings = {
   admin: {
     title: "Salesforce認定アドミニストレーター",
     description: "正答率解析 合格点 65%",
-    placeholder: "ここにメールやWebで得た試験結果を貼り付けて、解析ボタンを押してください。\n以下貼り付ける例：\n\nConfiguration and Setup（設定とセットアップ）: 70%\nObject Manager and Lightning App Builder（オブジェクトマネージャとLightning アプリケーションビルダー）	70%\nSales and Marketing Applications（セールス&マーケティングアプリケーション）	70%\nService and Support Applications（サービス&サポートアプリケーション）	70%\nProductivity and Collaboration（生産性向上とコラボレーション）	70%\nData and Analytics Management（データ管理&分析）	70%\nWorkflow/Process Automation（ワークフロー/プロセスの自動化）&#20;70%",
+    placeholder: "ここにメールやWebで得た試験結果を貼り付けて、解析ボタンを押してください。\n以下貼り付ける例：\n\nConfiguration and Setup（設定とセットアップ）: 70%\nObject Manager and Lightning App Builder（オブジェクトマネージャとLightning アプリケーションビルダー）	70%\nSales and Marketing Applications（セールス&マーケティングアプリケーション）	70%\nService and Support Applications（サービス&サポートアプリケーション）	70%\nProductivity and Collaboration（生産性向上とコラボレーション）	70%\nData and Analytics Management（データ管理&分析）	70%\nWorkflow/Process Automation（ワークフロー/プロセスの自動化）70%",
     settings: {
       "Configuration and Setup": 20,
       "Object Manager and Lightning App Builder": 20,
